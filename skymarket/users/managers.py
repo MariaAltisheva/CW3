@@ -1,20 +1,13 @@
 from django.contrib.auth.models import (
     BaseUserManager
 )
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-
-# TODO здесь должен быть менеджер для модели Юзера.
-# TODO Поищите эту информацию в рекомендациях к проекту
-
-class UserRoles(models.TextChoices):
-    USER = 'USR', _('user')
-    ADMIN = 'ADM', _('admin')
 
 class UserManager(BaseUserManager):
-    """ Функци ясоздания пользователя - в нее мы передаем обязательные поля"""
-
-    def create_user(self, email, first_name, last_name, phone, role=UserRoles.USER, password=None):
+    def create_user(self, email, first_name, last_name, phone, password=None):
+        """
+        Creates and saves a User with the given email, date of
+        birth and password.
+        """
         if not email:
             raise ValueError('Users must have an email address')
         user = self.model(
@@ -22,16 +15,19 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             phone=phone,
-            role=role
         )
+        user.role = "user"
         user.is_active = True
         user.set_password(password)
         user.save(using=self._db)
 
         return user
 
-    def create_superuser(self, email, first_name, last_name, phone, role=UserRoles.ADMIN, password=None):
-        """функция для создания суперпользователя - с ее помощью мы создаем администратора"""
+    def create_superuser(self, email, first_name, last_name, phone, password=None):
+        """
+        Creates and saves a superuser with the given email, date of
+        birth and password.
+        """
 
         user = self.create_user(
             email,
@@ -39,8 +35,7 @@ class UserManager(BaseUserManager):
             last_name=last_name,
             phone=phone,
             password=password,
-            role=role
         )
-
+        user.role = "admin"
         user.save(using=self._db)
         return user
