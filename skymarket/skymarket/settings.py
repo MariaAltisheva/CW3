@@ -82,8 +82,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "skymarket.wsgi.application"
 
-# TODO здесь мы настраиваем аутентификацию и пагинацию
+
 REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
 
 DJOSER = {
@@ -102,7 +105,7 @@ DATABASES = {
         'NAME': 'skymarket',
         'USER': 'skymarket',
         'PASSWORD': 'skymarket',
-        'PORT': '5433',
+        'PORT': '5434',
         'HOST': 'localhost',
 
 
